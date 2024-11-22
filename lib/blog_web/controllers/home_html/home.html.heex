@@ -1,0 +1,15 @@
+<div class="middle_buffer">
+  <section id="home_section">
+    <p> Add some text here about myself and the site </p>
+    <h1> Posts </h1>
+    <%= for post <- @posts do %>
+      <a href={"posts/" <> post.path}>
+        <article class="article_card">
+          <h2><%= post.title %></h2>
+          <time><%= post.date %></time>
+          <p><%= post.summary %></p>
+        </article>
+      </a>
+      <% end %>
+  </section>
+</div>
