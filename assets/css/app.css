@@ -114,6 +114,13 @@ html {
 .post_section p {
     text-align: justify;
 }
+.post_section a {
+    text-decoration: underline;
+    color: var(--light);
+}
+.post_section a:hover {
+    color: var(--bright_pri);
+}
 .post_section img {
     display: block;
     margin-left: auto;
@@ -122,12 +129,15 @@ html {
 }
 .post_section h1 {
     color: var(--bright_sec);
+    font-size: 1.5em;
 }
 .post_section h2 {
     color: var(--bright_sec);
+    font-size: 1em;
 }
 .post_section h3 {
     color: var(--bright_sec);
+    font-size: 0.8em;
 }
 
 #post_toc ul {
@@ -158,4 +168,10 @@ html {
 }
 #post_toc .h3:hover {
     color: var(--bright_pri);
+}
+#post_toc .h2:before {
+    content: "-";
+}
+#post_toc .h3:before {
+    content: "--";
 }
