@@ -53,6 +53,8 @@ html {
 #nav_bar {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--bright_pri);
+    padding-bottom: 0.5em;
 }
 #nav_bar ul {
     list-style-type: none;
