@@ -1,15 +1,21 @@
 defmodule Blog.Posts do
   @content_url "https://raw.githubusercontent.com/jasshanK/blog_content/refs/heads/main/"
+  @content_local "/home/jasshank/proj/blog/blog_content/"
   def get_page(file) do
-    base_url = @content_url <> file |> String.to_charlist()
+    url = @content_url <> file |> String.to_charlist() |> IO.inspect()
 
     :inets.start()
     :ssl.start() 
 
-    {:ok, {_header, _metadata, data}} = :httpc.request(:get, {base_url, []}, [], [])
+    {:ok, {_header, _metadata, data}} = :httpc.request(:get, {url, []}, [], [])
 
     data
   end
+
+  def get_page_local(file) do
+    location = @content_local <> file
+    File.read!(location)
+  end 
 
   def get_posts() do
     posts = 
@@ -56,8 +62,8 @@ defmodule Blog.Posts do
   def get_html(post_path) do
     {:ok, ast, _} = get_page(post_path)
       |> to_string()
-      |> Earmark.Parser.as_ast()
-    
+      |> EarmarkParser.as_ast(math: true)
+
     {ast, headings} = Earmark.Transform.map_ast_with(ast, [], &add_id_to_heading/2, true)
 
     ast = Earmark.Transform.map_ast(ast, fn {tag, attr, content, meta} -> 
@@ -75,6 +81,19 @@ defmodule Blog.Posts do
         {tag, attr, content, meta}
       end
     end, true)
+
+    ast = Earmark.Transform.map_ast(ast, 
+      fn {"code", [{"class", "math-inline"}] = attr, content, meta} -> 
+            node = {"code", attr, "$" <> List.first(content) <> "$" , meta}
+
+            {:replace, node}
+         {"code", [{"class", "math-display"}] = attr, content, meta} -> 
+            node = {"code", attr, "$$" <> List.first(content) <> "$$" , meta}
+
+            {:replace, node}
+        {tag, attr, content, meta} -> {tag, attr, content, meta}
+      end, 
+    true)
 
     {Earmark.Transform.transform(ast) |> Phoenix.HTML.raw(), headings |> Enum.reverse()}
   end

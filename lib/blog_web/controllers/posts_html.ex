@@ -20,7 +20,13 @@ defmodule BlogWeb.PostsHTML do
     </div>
     <script>
       MathJax = {
-        tex: {inlineMath: [['$', '$']]}
+        tex: {
+          inlineMath: [['$', '$']],
+          displayMath: [['$$', '$$']]
+        },
+        options: {
+          processHtmlClass: "math-inline|math-display"
+        },
       };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
