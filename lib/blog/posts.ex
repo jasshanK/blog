@@ -66,6 +66,16 @@ defmodule Blog.Posts do
 
     {ast, headings} = Earmark.Transform.map_ast_with(ast, [], &add_id_to_heading/2, true)
 
+    ast = Earmark.Transform.map_ast(ast, fn {tag, attr, content, meta} ->
+      if String.at(tag, 0) == "h" do
+        attr = [{"onclick", "location.href='#top'"} | attr]
+
+        {tag, attr, content, meta} 
+      else
+        {tag, attr, content, meta} 
+      end
+      end, true)
+
     ast = Earmark.Transform.map_ast(ast, fn {tag, attr, content, meta} -> 
       if tag == "img" do
         {_src_tag, img_path} = List.first(attr) 
